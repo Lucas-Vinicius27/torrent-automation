@@ -13,9 +13,9 @@ services:
       - DELUGE_WEB_PASSWORD=${DELUGE_WEB_PASSWORD}
       - API_KEY_DELUGE=${API_KEY_DELUGE}
     volumes:
-      - ./deluge/config:/config
-      - ./deluge/downloads/:/downloads
-      - ./deluge/share/:/share
+      - ./services/deluge/config:/config
+      - ./services/downloads/:/downloads
+      - ./services/share/:/share
     ports:
       - 8112:8112
       - 6881:6881
