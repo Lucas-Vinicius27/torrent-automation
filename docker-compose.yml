@@ -23,6 +23,26 @@ services:
     restart: unless-stopped
     networks:
       - mynetwork
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    # network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=America/Sao_Paulo
+      - API_KEY=${API_KEY_JACKET}
+      - WEB_UI_USERNAME=${WEB_UI_USERNAME_JACKETT}
+      - WEB_UI_PASSWORD=${WEB_UI_PASSWORD_JACKETT}
+    volumes:
+      - ./services/jackett/config:/config
+      - ./services/downloads:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:
