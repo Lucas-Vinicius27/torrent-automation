@@ -11,7 +11,6 @@ services:
       - UMASK_SET=022
       - TZ=America/Sao_Paulo
       - DELUGE_WEB_PASSWORD=${DELUGE_WEB_PASSWORD}
-      - API_KEY_DELUGE=${API_KEY_DELUGE}
     volumes:
       - ./services/deluge/config:/config
       - ./services/downloads/:/downloads
