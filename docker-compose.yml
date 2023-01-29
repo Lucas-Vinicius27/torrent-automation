@@ -56,7 +56,7 @@ services:
       - 8989:8989
     volumes:
       - ./services/sonarr/config:/config
-      - ./services/sonarr/series:/tv
+      - ./services/series:/tv
       - ./services/downloads:/downloads
     restart: unless-stopped
     networks:
