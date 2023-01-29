@@ -25,5 +25,17 @@ docker-compose down
 * Criar uma senha de preferência diferente da senha utilizada no `JACKETT`, para aplicar na variável `DELUGE_WEB_PASSWORD`, colocando no lugar da palavra `mysecretpassword`, se a senha da variável não funcionar, será porque ela não foi aplicada e o serviço `DELUGE` está utilizando a senha padrão que é `deluge`, na UI do `DELUGE` em `preferences -> interface -> WebUI Password` é possível alterar a senha, altere para aumentar sua segurança.
 * UI do serviço `DELUGE` irá aparecer no link `http://localhost:8112/`.
 * UI do serviço `JACKETT` irá aparecer no link `http://localhost:9117/`.
+* UI do serviço `SONARR` irá apareer no link `http://localhost:8989/`.
 * Caso você vá subir os serviços em um servidor descomentar as linhas que possuem o comando `network_mode: host` no arquivo `docker-compose.yml`, e para acessar as UIs no lugar da palavra `localhost` será o IP do seu servidor.
+
+## Configuração Deluge
 * Suba os serviços para que os diretórios sejam criados, na pasta de configurações do `DELUGE` (caminho da pasta `services/deluge/config`), encontrar o arquivo `core.conf` e adicionar a linha `"tracker_host": "ìp_maquina:porta_jackett"`, onde `ìp_maquina` será o IP da sua máquina ou servidor, `porta_jackett` será a porta de acesso ao serviço `JACKETT` se você não alterar será `9117`, salve o arquivo, remova os serviços e suba novamente, para que o `DELUGE` possa pegar a nova configuração.
+* Na UI do `DELUGE` ir em `preferences -> daemon -> connections` marque o checkbox da opção `Allow Remote Connections` e aplique está configuração. Ir também em `preferences -> plugins -> AutoAdd` e `plugins -> Label` marque as duas opções e aplique.
+
+## Configuração Jackett
+* Na UI do serviço adicionar indexers, para pesquisa de torrents.
+
+## Configuração Sonarr
+* Na UI do serviço ir em `Settings -> Download Client` e configure o `DELUGE`.
+* Para colocar os indexers do `JACKETT` no `SONARR` seguir os passos da UI do `JACKETT` que se encontram na parte `Adding a Jackett indexer in Sonarr or Radarr`.
+* Adicione suas séries ao `SONARR`.
