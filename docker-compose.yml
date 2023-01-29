@@ -43,6 +43,24 @@ services:
     restart: unless-stopped
     networks:
       - mynetwork
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    # network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=America/Sao_Paulo
+    ports:
+      - 8989:8989
+    volumes:
+      - ./services/sonarr/config:/config
+      - ./services/sonarr/series:/tv
+      - ./services/downloads:/downloads
+    restart: unless-stopped
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:
