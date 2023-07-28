@@ -1,0 +1,162 @@
+version: "3.7"
+
+services:
+  # samba:
+  #   image: servercontainers/samba
+  #   container_name: samba
+  #   network_mode: host
+  #   restart: always
+  #   environment:
+  #     SAMBA_VOLUME_CONFIG_share: "[Share]; path=/shares/share; guest ok = yes; read only = no; browseable = yes; writable = yes; comment = Shared Folder"
+  #     SAMBA_VOLUME_CONFIG_torrent: "[Torrent]; path=/shares/torrent; guest ok = yes; read only = no; browseable = yes; writable = yes; comment = Torrent Folder"
+  #   volumes:
+  #     - /etc/avahi/services/:/external/avahi
+  #     - /media/USBHDD/share:/shares/share
+  #     - /media/USBHDD/torrent:/shares/torrent
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    # network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=America/Sao_Paulo
+      # hash md5 123456_TESTE_KEY_API
+      - API_KEY=946336c313b30e0828a42694fb691cf7
+      - WEB_UI_USERNAME=JACKETT
+      - WEB_UI_PASSWORD=JACKETT
+    volumes:
+      - ./jackett/config:/config
+      - ./deluge/config:/config
+      - ./deluge/downloads/:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+    networks:
+      - mynetwork
+  deluge:
+    image: linuxserver/deluge:latest
+    container_name: deluge
+    # network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=022
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ./deluge/config:/config
+      - ./deluge/downloads/:/downloads
+      - ./deluge/share/:/share
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+    networks:
+      - mynetwork
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    # network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - UMASK_SET=022
+    ports:
+      - 8989:8989
+    volumes:
+      - ./sonarr/config:/config
+      - ./sonarr/series:/tv
+      - ./deluge/downloads/:/downloads
+    restart: unless-stopped
+    networks:
+      - mynetwork
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    # network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - UMASK_SET=022
+    ports:
+      - 6767:6767
+    volumes:
+      - ./bazarr/config:/config
+      - ./deluge/downloads:/downloads
+      # - ./media/USBHDD/share/videos/movies:/movies
+      - ./sonarr/series:/tv
+    restart: unless-stopped
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+  # radarr:
+  #   image:  linuxserver/radarr
+  #   container_name: radarr
+  #   network_mode: host
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Sao_Paulo
+  #   volumes:
+  #     - ./radarr/config:/config
+  #     - /media/USBHDD/share/videos/movies:/movies
+  #     - /media/USBHDD/torrent:/downloads
+  #   restart: unless-stopped
+  # plex:
+  #  image: linuxserver/plex
+  #  container_name: plex
+  #  network_mode: host
+  #  environment:
+  #    - PUID=1000
+  #    - PGID=1000
+  #    - VERSION=docker
+  #  volumes:
+  #    - ./plex/config:/config
+  #    - /media/USBHDD/share/videos/series:/tv
+  #    - /media/USBHDD/share/videos/movies:/movies
+  #    - /media/USBHDD/share/videos/plex/transcoding:/transcode
+  #  restart: unless-stopped
+  # organizr:
+  #   container_name: organizr
+  #   image: organizr/organizr
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./organizr/config:/config
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Sao_Paulo
+  #     - fpm=true
+  #     - branch=v2-master
+  #   network_mode: host
+  # prowlarr:
+  #   image: linuxserver/prowlarr:develop
+  #   container_name: prowlarr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Sao_Paulo
+  #   volumes:
+  #     - ./prowlarr:/config
+  #   ports:
+  #     - 9696:9696
+  #   restart: unless-stopped
+  # overseerr:
+  #   image: ghcr.io/linuxserver/overseerr
+  #   container_name: overseerr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=America/Sao_Paulo
+  #   volumes:
+  #     - ./overseerr:/config
+  #   ports:
+  #     - 5055:5055
+  #   restart: unless-stopped
